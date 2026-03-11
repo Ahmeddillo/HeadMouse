@@ -1,6 +1,6 @@
 # 🖱️ HeadMouse: Hands-Free Cursor Control via Head Tracking
 
-> A hybrid assistive technology system that enables people with upper-limb disabilities to control their computer cursor using only head movements — while keeping the physical mouse exclusively for clicking and scrolling.
+> A hybrid assistive technology system that enables people with upper-limb disabilities to control their computer cursor using only head movements, while keeping the physical mouse exclusively for clicking and scrolling.
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat-square&logo=python)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green?style=flat-square&logo=opencv)
@@ -9,9 +9,9 @@
 
 ---
 
-## 🎯 Concept
+## 🟣 Concept
 
-Most head-tracking systems try to handle **everything** through the camera — movement, clicking, scrolling — leading to false triggers and frustrating user experiences.
+Most head-tracking systems try to handle **everything** through the camera — movement, clicking, scrolling, leading to false triggers and frustrating user experiences.
 
 **HeadMouse takes a different approach:**
 
@@ -24,7 +24,7 @@ The physical mouse is **position-locked** via a `pynput` listener. When the user
 
 ---
 
-## ✨ Key Features
+## 🟣 Key Features
 
 - **Relative movement architecture** — cursor moves based on *how much* the head deviates from neutral, not *where* the head is. This means the cursor can reach every corner of the screen with minimal head movement.
 - **Automatic calibration** — the system measures each user's neutral nose position over 60 frames at startup. No manual configuration needed.
@@ -35,7 +35,7 @@ The physical mouse is **position-locked** via a `pynput` listener. When the user
 
 ---
 
-## 🧠 How It Works
+## 🟣 How It Works
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -65,7 +65,7 @@ The physical mouse is **position-locked** via a `pynput` listener. When the user
 
 ---
 
-## 🚀 Installation
+## 🟣 Installation
 
 ### Requirements
 
@@ -95,7 +95,7 @@ python hibrit_fare_v2.py
 
 ---
 
-## ⚙️ Configuration
+## 🟣 Configuration
 
 All tunable parameters are at the top of the script:
 
@@ -110,7 +110,7 @@ All tunable parameters are at the top of the script:
 
 ---
 
-## 🏥 Target Users
+## 🟣 Target Users
 
 This project is designed for individuals with **upper-limb motor impairments** who:
 - Can move their head freely
@@ -119,7 +119,7 @@ This project is designed for individuals with **upper-limb motor impairments** w
 
 ---
 
-## 📚 Related Work
+## 🟣 Related Work
 
 This project builds on and differentiates from existing head-tracking research:
 
@@ -131,13 +131,13 @@ This project builds on and differentiates from existing head-tracking research:
 
 ---
 
-## 📄 License
+## 🟣 License
 
 MIT License — free to use, modify, and distribute with attribution.
 
 ---
 
-## 🤝 Contributing
+## 🟣 Contributing
 
 Issues and pull requests are welcome. Areas for improvement:
 - Multi-monitor support
