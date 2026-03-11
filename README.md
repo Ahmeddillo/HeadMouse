@@ -1,4 +1,4 @@
-# 🖱️ HeadMouse — Hands-Free Cursor Control via Head Tracking
+# 🖱️ HeadMouse: Hands-Free Cursor Control via Head Tracking
 
 > A hybrid assistive technology system that enables people with upper-limb disabilities to control their computer cursor using only head movements — while keeping the physical mouse exclusively for clicking and scrolling.
 
