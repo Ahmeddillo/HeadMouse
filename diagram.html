@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeadMouse — System Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --border: #1e2330;
+    --accent-blue: #3b82f6;
+    --accent-green: #22d3a0;
+    --accent-orange: #f97316;
+    --accent-purple: #a855f7;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+
+  .canvas {
+    width: 900px;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
+    padding: 4px 14px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .subtitle {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* Main layout: two columns */
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  /* Pipeline card */
+  .pipeline {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .pipeline.blue::before  { background: var(--accent-blue); }
+  .pipeline.orange::before { background: var(--accent-orange); }
+
+  .pipeline-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pipeline.blue  .pipeline-label { color: var(--accent-blue); }
+  .pipeline.orange .pipeline-label { color: var(--accent-orange); }
+
+  .pipeline-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Steps */
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .blue  .step-icon { background: rgba(59,130,246,0.15); }
+  .orange .step-icon { background: rgba(249,115,22,0.15); }
+
+  .step-content {}
+
+  .step-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 3px;
+  }
+
+  .step-desc {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .step-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-top: 5px;
+  }
+
+  .blue  .step-tag { background: rgba(59,130,246,0.12); color: var(--accent-blue); }
+  .orange .step-tag { background: rgba(249,115,22,0.12); color: var(--accent-orange); }
+
+  /* Arrow between steps inside card */
+  .arrow-down {
+    text-align: center;
+    color: var(--border);
+    font-size: 18px;
+    line-height: 1;
+    padding: 2px 0;
+    pointer-events: none;
+  }
+
+  /* Key innovation box */
+  .innovation {
+    background: linear-gradient(135deg, rgba(34,211,160,0.07) 0%, rgba(59,130,246,0.07) 100%);
+    border: 1px solid rgba(34,211,160,0.25);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .innovation-icon {
+    font-size: 40px;
+    flex-shrink: 0;
+  }
+
+  .innovation-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 8px;
+  }
+
+  .innovation-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.5;
+  }
+
+  .innovation-text span {
+    color: var(--accent-green);
+  }
+
+  /* Params row */
+  .params {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .param-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .param-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent-purple);
+    margin-bottom: 6px;
+  }
+
+  .param-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .param-desc {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-brand {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .footer-stack {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tech-pill {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="canvas">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">Assistive Technology · Open Source</div>
+    <h1>HeadMouse</h1>
+    <div class="subtitle">Hybrid head-tracking cursor control for upper-limb disabilities</div>
+  </div>
+
+  <!-- Two pipelines -->
+  <div class="columns">
+
+    <!-- Camera pipeline -->
+    <div class="pipeline blue">
+      <div class="pipeline-label">📷 Camera Pipeline</div>
+
+      <div class="step">
+        <div class="step-icon">👤</div>
+        <div class="step-content">
+          <div class="step-title">Face Detection</div>
+          <div class="step-desc">dlib frontal face detector<br>locates face each frame</div>
+          <div class="step-tag">dlib HOG detector</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">👃</div>
+        <div class="step-content">
+          <div class="step-title">Nose Tip Tracking</div>
+          <div class="step-desc">68 facial landmarks predicted<br>landmark #30 = nose tip</div>
+          <div class="step-tag">shape_predictor_68</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">📐</div>
+        <div class="step-content">
+          <div class="step-title">Deviation from Neutral</div>
+          <div class="step-desc">Δx, Δy from calibrated<br>neutral nose position</div>
+          <div class="step-tag">auto-calibrated · 60 frames</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">⚡</div>
+        <div class="step-content">
+          <div class="step-title">Speed Curve + Smoothing</div>
+          <div class="step-desc">Exponential velocity mapping<br>Dead zone · Tremor filter</div>
+          <div class="step-tag">SPEED=8 · CURVE=1.4</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">🖥️</div>
+        <div class="step-content">
+          <div class="step-title">Cursor Movement</div>
+          <div class="step-desc">pyautogui.moveTo() called<br>every frame at 30 FPS</div>
+          <div class="step-tag">pyautogui</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Physical mouse pipeline -->
+    <div class="pipeline orange">
+      <div class="pipeline-label">🖱️ Physical Mouse Pipeline</div>
+
+      <div class="step">
+        <div class="step-icon">🔒</div>
+        <div class="step-content">
+          <div class="step-title">Position Lock</div>
+          <div class="step-desc">pynput listener intercepts<br>all mouse move events</div>
+          <div class="step-tag">pynput.Listener</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">📍</div>
+        <div class="step-content">
+          <div class="step-title">Snap to Camera Target</div>
+          <div class="step-desc">If physical move > 4px from<br>target → snap back instantly</div>
+          <div class="step-tag">thread-safe lock</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">✅</div>
+        <div class="step-content">
+          <div class="step-title">Clicks Pass Through</div>
+          <div class="step-desc">Left, right, double click<br>all work natively</div>
+          <div class="step-tag">no interception</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">🔄</div>
+        <div class="step-content">
+          <div class="step-title">Scroll Pass Through</div>
+          <div class="step-desc">Wheel scroll events<br>pass through unmodified</div>
+          <div class="step-tag">no interception</div>
+        </div>
+      </div>
+
+      <div class="arrow-down">↓</div>
+
+      <div class="step">
+        <div class="step-icon">🙌</div>
+        <div class="step-content">
+          <div class="step-title">Natural Hand Rest</div>
+          <div class="step-desc">User rests hand on mouse<br>clicks freely — no movement</div>
+          <div class="step-tag">key UX insight</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key innovation -->
+  <div class="innovation">
+    <div class="innovation-icon">💡</div>
+    <div>
+      <div class="innovation-title">Core Design Decision</div>
+      <div class="innovation-text">
+        Instead of solving movement <span>and</span> clicking through the camera
+        (the root cause of false triggers in existing systems),
+        HeadMouse uses a <span>hybrid input architecture</span> —
+        camera owns movement, physical device owns actions.
+      </div>
+    </div>
+  </div>
+
+  <!-- Params -->
+  <div class="params">
+    <div class="param-card">
+      <div class="param-name">DEAD_ZONE</div>
+      <div class="param-val">8px</div>
+      <div class="param-desc">Min deviation to register movement. Filters micro-tremors.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">SPEED</div>
+      <div class="param-val">8.0</div>
+      <div class="param-desc">Base velocity multiplier. Tune this first.</div>
+    </div>
+    <div class="param-card">
+      <div class="param-name">SPEED_CURVE</div>
+      <div class="param-val">1.4×</div>
+      <div class="param-desc">Exponential curve. Large moves get proportionally faster.</div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-brand">HeadMouse</div>
+    <div class="footer-stack">
+      <span class="tech-pill">Python 3.8+</span>
+      <span class="tech-pill">OpenCV</span>
+      <span class="tech-pill">dlib</span>
+      <span class="tech-pill">pyautogui</span>
+      <span class="tech-pill">pynput</span>
+      <span class="tech-pill">MIT License</span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
